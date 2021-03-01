@@ -111,31 +111,8 @@ class mass_gen():
         for _ in range(exits):
             self.ran_direction
         
-        
-    # def existing_room(self):
-    #     """Will keep track of the rooms already passed through"""
-        
-    #     if self.left_count >= 1:
-    #         self.left_count.join(self.player_move)
-    #         print(self.player_move)
-    #         return self.room_built
-    #     elif self.right_count >= 1:
-    #         self.right_count.join(self.player_move)
-    #         print(self.player_move)
-    #         self.ran_exts()
-    #         return self.room_built
-    #     elif self.front_count >= 1:
-    #         self.front_count.join(self.player_move)
-    #         print(self.player_move)
-    #         self.ran_exts()
-    #         return self.room_built
-    #     elif self.back_count >= 1:
-    #         self.player_move.remove("back")
-    #         Add = self.player_move.pop(-1)
-    #         Add.join(self.room_built)
-    #         return self.room_built 
-    #     else:
-    #         return self.new_room
+   def existing_room(self):
+        pass
         
         
 
