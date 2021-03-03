@@ -1,67 +1,37 @@
 from roombuilder import mass_gen
-from Room import Room
+
 
 ## this is just a test to see if I can push code
 class game_loop():
     """Runs the game"""
-    def __init__(self, mass_gen, Room):
+    def __init__(self):
         self.call = mass_gen()
-        self.call.print_counts()
-        self.call.new_room() 
-        self.call.left_c
-        self.past_rooms = []
 
-    def new_room(self):
-        """Generates the new room in the game loop"""
-        return self.call.new_room() 
-
-    def user_input(self):
-        """Calls the user's input and allows for movement through exits"""
-        direction =  input("What Direction? ")
-        if direction == "left": 
-            if self.new_room().left:
-                print("Moves", direction)
-                self.past_rooms.append(direction)
-                return  self.call.left_c, print(self.past_rooms)
-                # self.new_room(),
-            else:
-                print("Wall")
-                return self.user_input()
-        elif direction == "right":
-            if self.new_room().right:
-                print("Moves", direction)
-                self.past_rooms.append(direction)
-                return self.count and self.new_room()
-            else:
-                print("Wall")
-                return self.user_input()
-
-        elif direction == "front": 
-            if self.new_room().front:
-                print("Moves", direction)
-                # self.p_m.append(direction)
-                return self.count() and self.new_room()
-            else:
-                print("Wall")
-                return self.user_input()
-     
-        elif direction == "back": 
-            if self.new_room().back:
-                print("Moves", direction)
-                # self.p_m.append(direction)
-                return self.count() and self.new_room()
-            else:
-                print("Wall")
-                return self.user_input()
-
+    def input_loop(self):
+        """ Loops until user enters valid move """
+        print('Enter Direction')
+        user_move = input()
+        # checks if they enter proper move
+        if user_move in ['forward','backward','left','right']:
+            return user_move
+        # if they dont then it asks again
         else:
-            print("Bad Input") 
-            return self.user_input()
+            return self.input_loop()
 
-    
-    # def capture_past_rooms(self):
-    #     """Captures and adds players move to list"""
-    #     print("here at capture rooms")
-    #     player = self.user_input()
-    #     player.append(self.past_rooms)
-    #     return print(self.past_rooms)
+    def room_loop(self):
+        """ Loops until user exits room """
+        user_move = self.input_loop()
+        if self.call.can_move(user_move):
+            return True
+        else: 
+            return self.room_loop
+
+    def run(self):
+        print('welcome')
+        # makes the base room
+        self.call.next_room('first')
+        while True:
+            self.room_loop()
+
+test = game_loop()
+test.run()

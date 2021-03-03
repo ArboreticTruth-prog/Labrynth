@@ -1,34 +1,30 @@
-from room import Room
+from Room import Room
 import random
+
 class mass_gen():
     """Generates the room and its subsequent attatchments"""
     def __init__(self):
         self.count = 0
-        self.left_count = 0
-        self.right_count = 0
-        self.front_count = 0
-        self.back_count = 0
-    
-    def print_counts(self):
-        """Prints counts"""
-        return print(self.left_count, self.right_count, self.back_count, self.front_count)
-    
+        self.start_room = None
+        self.current_room = None
     
     def random(self):
         """gen's a random number to use"""
         return random.randint(1, 4)
     
-    def random_room(self):
-        """Builds the room"""
-        # names = ["bed1", "bed2", "bed3",'bed4' ]
-        # ran_gen = self.random()
-        self.room_built = Room()
-            
+    def new_room(self):
+        """Generates a room object
+        """
+        return Room()
         
+    def ran_direction(self,room):
+        """generates random direction for room
         
-    def ran_direction(self):
-        """generates random directions for each room"""
-        room = self.room_built
+        args: 
+            room: the room object to generate for
+
+        return: room object 
+        """
         ran_dirt = self.random()
         if 1 == ran_dirt: 
             room.front_attch(True)
@@ -38,91 +34,85 @@ class mass_gen():
             room.left_attch(True)
         elif 4 == ran_dirt: 
             room.right_attch(True)
-        self.count += 1
-        self.room_built = room
-        
-    def left_c(self):
-        """Tracks left movement"""
-        print("at left count")
-        self.left_count += 1
-    # def counts(self):
-    #     """Keeps track of each direction/exit per room"""
-    #     """self.player_move is a list, these are trying to pull it as a string"""
-    #     print("Here at Counts")
-    #     if ['left']:
-    #         self.left_count += 1
-    #         print(self.left_count)
-    #     elif self.player_move == 'right':
-    #         self.right_count += 1
-    #     elif self.player_move == 'front':
-    #         self.front_count += 1
-    #     elif self.player_move == 'back':
-    #         self.back_count += 1
-    #     else:
-    #         pass
+        return room
 
-        # if self.left_count >= 1:
-        #     "+".join(self.player_move)
-        #     print(self.player_move)
-        #     return self.ran_exts(), self.new_room()
-        #     # return self.ran_exts(), self.room_built
-        # if self.right_count >= 1:
-        #     self.right_count.join(self.player_move)
-        #     print(self.player_move)
-        #     self.ran_exts()
-        #     return self.room_built
-        # elif self.front_count >= 1:
-        #     self.front_count.join(self.player_move)
-        #     print(self.player_move)
-        #     self.ran_exts()
-        #     return self.room_built
-        # elif self.back_count >= 1:
-        #     self.player_move.remove("back")
-        #     Add = self.player_move.pop(-1)
-        #     Add.join(self.room_built)
-        #     return self.room_built 
-        # else:
-        #     return self.new_room
+    def ran_exts(self, room):
+        """Generates the random number of exits for room 
+        
+        args: 
+            room: the room object 
 
-    def ran_exts(self):
-        """Generates the random directions/exits"""
-        # print("here at ran_exts")
-        x = self.random()
-        for _ in range(x):
-            self.ran_direction()
-        # for i in range(exits):
-        #     self.ran_direction()
+        returns: room object
+        """
+        for _ in range(self.random()):
+            room = self.ran_direction(room)
+        return room
         
-        
-    # def existing_room(self):
-    #     """Will keep track of the rooms already passed through"""
-        
-    #     if self.left_count >= 1:
-    #         self.left_count.join(self.player_move)
-    #         print(self.player_move)
-    #         return self.room_built
-    #     elif self.right_count >= 1:
-    #         self.right_count.join(self.player_move)
-    #         print(self.player_move)
-    #         self.ran_exts()
-    #         return self.room_built
-    #     elif self.front_count >= 1:
-    #         self.front_count.join(self.player_move)
-    #         print(self.player_move)
-    #         self.ran_exts()
-    #         return self.room_built
-    #     elif self.back_count >= 1:
-    #         self.player_move.remove("back")
-    #         Add = self.player_move.pop(-1)
-    #         Add.join(self.room_built)
-    #         return self.room_built 
-    #     else:
-    #         return self.new_room
-        
-        
+    def build_room(self):
+        """Generates a new room with exits"""
+        room = self.new_room()
+        return self.ran_exts(room)
 
-    def new_room(self):
-        """Generates the new_room when moving through an exit"""
-        self.random_room()
-        self.ran_exts()
-        return self.room_built
+    def next_room(self,direction):
+        """ Generates the next room to move into
+        
+            if no start room or current room 
+                sets those
+
+            returns: None if this is first room 
+                    else return True
+            
+        """
+        if self.start_room == None:
+            self.start_room = self.build_room()
+            self.current_room = self.start_room
+            return None
+        next_gen_room = self.build_room()
+        self.attach_rooms(next_gen_room,direction)
+        return True
+
+    def attach_rooms(self,room, direction):
+        """ Attaches room to current_room then updates current_room to the new room
+        
+        args: 
+            room: room object to add on
+        direction: 
+            the side to attach room on
+                accepts: [front,left,right,back]
+        """
+        if direction == 'forward':
+            # attach new room to current
+            self.current_room.front_attch(room)
+            # attach current to new
+            room.back_attch(self.current_room)
+        elif direction == 'left':
+            self.current_room.left_attch(room)
+            room.right_attch(self.current_room)
+        elif direction == 'right':
+            self.current_room.right_attch(room)
+            room.left_attch(self.current_room)
+        elif direction == 'backward':
+            self.current_room.back_attch(room)
+            room.front_attch(self.current_room)
+        else: 
+            return None
+        # make current room the new room
+        self.current_room = room
+
+    def can_move(self,direction):
+        """ Checks if current room has exit
+            makes next room if exit
+        
+        args: 
+            direction: the side of room to check for exit
+
+        return: bool if able to move
+        """
+        if direction in self.current_room.return_directions():
+            print('move into the next room')
+            # makes next room 
+            self.next_room(direction)
+            return True
+        else:
+            print("Can't move that way")
+            return False

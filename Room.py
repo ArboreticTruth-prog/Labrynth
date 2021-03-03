@@ -8,18 +8,47 @@ class Room():
         self.back = False
         
     def left_attch(self, x):
-        self.left  = x
+        """ Adds pointer
         
+        args:
+            x: object to attach
+        """
+        self.left  = x
 
     def right_attch(self, y):
+        """ Adds pointer
+        
+        args:
+            y: object to attach
+        """
         self.right = y
 
     def back_attch(self, c):
+        """ Adds pointer
+        
+        args:
+            c: object to attach
+        """
         self.back = c
 
     def front_attch(self, f):
-        self.front = f
+        """ Adds pointer
         
+        args:
+            f: object to attach
+        """
+        self.front = f
 
-    # def print_att(self):
-    #     print('left', self.left, 'right', self.right, 'back', self.back, 'front', self.front)
+    def return_directions(self):
+        """ Returns all directions the room has """
+        ret = []
+        if self.front:
+            ret.append('forward')
+        if self.back:
+            ret.append('backward')
+        if self.left:
+            ret.append('left')
+        if self.right:
+            ret.append('right')
+        return ret
+
